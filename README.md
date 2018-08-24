@@ -1,6 +1,6 @@
 # shadow-css
 
-Polyfill your Shadow DOM styles in 500 bytes!
+Maybefill your Shadow DOM styles in 500 bytes!
 
 - `:host` and `:host-context` support.
 - Class name scoping.

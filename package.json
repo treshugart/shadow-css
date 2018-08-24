@@ -1,6 +1,6 @@
 {
   "name": "shadow-css",
-  "description": "Polyfill your Shadow DOM styles in 500 bytes!",
+  "description": "Maybefill your Shadow DOM styles in 500 bytes!",
   "main": "dist.js",
   "files": [
     "dist.js"
