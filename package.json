@@ -1,7 +1,10 @@
 {
   "name": "shadow-css",
   "description": "Polyfill your Shadow DOM styles in 500 bytes!",
-  "main": "index.js",
+  "main": "dist.js",
+  "files": [
+    "dist.js"
+  ],
   "scripts": {
     "prepublish": "babel index.js --out-file dist.js",
     "test": "echo \"Error: no test specified\" && exit 1"
