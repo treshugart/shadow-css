@@ -1,6 +1,5 @@
 {
   "name": "shadow-css",
-  "version": "0.0.0",
   "description": "Polyfill your Shadow DOM styles in 500 bytes!",
   "main": "index.js",
   "scripts": {
