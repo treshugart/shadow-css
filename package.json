@@ -4,12 +4,13 @@
   "description": "Polyfill your Shadow DOM styles in 500 bytes!",
   "main": "index.js",
   "scripts": {
+    "prepublish": "babel index.js --out-file dist.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Trey Shugart <treshugart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.3",
+    "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0"
   }
 }
