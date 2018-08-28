@@ -1,4 +1,5 @@
 const cached = {};
+const mapScope = new WeakMap();
 const native =
   typeof customElements !== "undefined" &&
   customElements.define.toString().indexOf("native code") > -1;
@@ -7,41 +8,58 @@ const regexHostBare = /:host([\s\{])/g;
 const regexHostContext = /:host-context\(([^)]+)\)/g;
 const regexHostSelector = /:host\(([^)]+)\)/g;
 
-let scope = 0;
+let ids = 0;
+let scopes = 0;
+
+function appendToHead(parsed, scope) {
+  const style = document.createElement("style");
+  if (scope) {
+    style.setAttribute("scope", scope);
+  }
+  style.textContent = parsed;
+  document.head.appendChild(style);
+}
+
+function parse(id, css) {
+  const hostSelector = `[__scope-${cached[id][css]}]`;
+  let parsed = css;
+  parsed = parsed.replace(regexClassName, `${hostSelector} .$1`);
+  parsed = parsed.replace(regexHostBare, `${hostSelector}$1`);
+  parsed = parsed.replace(regexHostContext, `$1 ${hostSelector}`);
+  parsed = parsed.replace(regexHostSelector, `${hostSelector}$1`);
+  return parsed;
+}
+
 export default function css(str) {
-  return function parse(host) {
+  return function(host) {
     if (native) {
       return str;
     }
 
-    const { localName } = host;
+    if (!host) {
+      appendToHead(str);
+      return;
+    }
+
+    let id = mapScope.get(host);
+    if (!id) {
+      mapScope.set(host, (id = ++ids));
+    }
 
     // Set up initial caches for this host.
-    if (!cached[localName]) {
-      cached[localName] = {};
+    if (!cached[id]) {
+      cached[id] = {};
     }
 
     // Already parsed. Already inserted.
-    if (cached[localName][str]) {
-      host.setAttribute(`__scope-${cached[localName][str]}`, "");
+    if (cached[id][str]) {
+      host.setAttribute(`__scope-${cached[id][str]}`, "");
       return;
     } else {
-      cached[localName][str] = ++scope;
-      host.setAttribute(`__scope-${cached[localName][str]}`, "");
+      cached[id][str] = ++scopes;
+      host.setAttribute(`__scope-${cached[id][str]}`, "");
     }
 
-    // Parse.
-    const hostSelector = `[__scope-${cached[localName][str]}]`;
-    let parsed = str;
-    parsed = parsed.replace(regexClassName, `${hostSelector} .$1`);
-    parsed = parsed.replace(regexHostBare, `${hostSelector}$1`);
-    parsed = parsed.replace(regexHostContext, `$1 ${hostSelector}`);
-    parsed = parsed.replace(regexHostSelector, `${hostSelector}$1`);
-
-    // Insert styles to head.
-    const style = document.createElement("style");
-    style.setAttribute("scope", scope);
-    style.textContent = parsed;
-    document.head.appendChild(style);
+    appendToHead(parse(id, str), scopes);
   };
 }
