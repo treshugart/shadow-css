@@ -2,18 +2,18 @@
   "name": "shadow-css",
   "description": "Maybefill your Shadow DOM styles in 500 bytes!",
   "main": "dist.js",
+  "module": "dist.mjs",
   "files": [
     "dist.js"
   ],
   "scripts": {
-    "prepublish": "babel index.js --out-file dist.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "microbundle",
+    "test": "exit 1"
   },
   "author": "Trey Shugart <treshugart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0"
+    "microbundle": "^0.9.0"
   },
   "version": "0.1.0"
 }
